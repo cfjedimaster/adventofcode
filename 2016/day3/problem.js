@@ -22,5 +22,4 @@ function validTriangle(a,b,c) {
     return true;
 }
 
-//986 is too high
 console.log(triangles);

@@ -37,7 +37,7 @@ function makeShapes(inp) {
 shapes = shapes.concat(makeShapes(colA));
 shapes = shapes.concat(makeShapes(colB));
 shapes = shapes.concat(makeShapes(colC));
-console.log('shapes = '+shapes.length);
+//console.log('shapes = '+shapes.length);
 
 var triangles = 0;
 
