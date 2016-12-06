@@ -1,11 +1,5 @@
 const fs = require('fs');
 const input = fs.readFileSync('./input.txt','utf8');
-const input1 = `101 301 501
-102 302 502
-103 303 503
-201 401 601
-202 402 602
-203 403 603`;
 
 /*
 now we need to make a new list of inputs based on columns
