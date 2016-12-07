@@ -1,6 +1,19 @@
 
 
-console.log(supportsTSL('abbaqrst[abba]m'));
+//console.log('  true is '+supportsTSL('abba[mnop]qrst'));
+//console.log('  false is '+supportsTSL('abcd[bddb]xyyx'));
+//console.log('  false is '+supportsTSL('aaaa[qwer]tyui'));
+//console.log('  true is '+supportsTSL('ioxxoj[asdfgh]zxcvbn'));
+
+const fs = require('fs');
+const input = fs.readFileSync('./input.txt','utf8');
+
+let good = 0;
+let lines = input.split('\n');
+lines.forEach(function(line) {
+    if(supportsTSL(line)) good++;
+});
+console.log('Answer: '+good);
 
 function hasABBA(s) {
     //prev1 is 3 behind
@@ -17,13 +30,12 @@ function hasABBA(s) {
         if(i > 2) prev1 = s.substr(i-3,1);
         //check for abba if we have gone far enough
         if(i >= 3) {
-            console.log('abba? '+prev1+prev2+prev3+curr);
+            //console.log('abba? '+prev1+prev2+prev3+curr);
             //console.log('does prev3 === prev2 '+(prev3===prev2));
             //if(prev3 === prev2) return false;
-            console.log('does prev1 eq curr? '+(prev1===curr));
-            console.log('does prev3 eq prev2? '+(prev2===prev3));
-            if(prev1 === curr && prev2 === prev3) return true;
-            console.log('GOT HERE');
+            //console.log('does prev1 eq curr? '+(prev1===curr));
+            //console.log('does prev3 eq prev2? '+(prev2===prev3));
+            if(prev1 === curr && prev2 === prev3 && prev1 !== prev2) return true;
         }
     }
     return false;
@@ -37,12 +49,12 @@ function supportsTSL(s) {
     //then look at the rest  
 
     let matches = s.match(/\[.*?\]/g);
-    console.dir(matches);
     for(let i=0;i<matches.length;i++) {
         let match = matches[i].replace(/[\[\]]/g, '');
-        console.log('check ABBA for '+match + '='+hasABBA(match));
+//        console.log('check ABBA for '+match + '='+hasABBA(match));
         if(hasABBA(match)) return false;
+        s = s.replace(matches[i], ' ');
     }
-
-    return false;
+//    console.log('pass bracket, now we have '+s);
+    return hasABBA(s);
 }
