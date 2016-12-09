@@ -1,17 +1,51 @@
 
 //screen size
-let width = 7;
-let height = 3;
+let width = 50;
+let height = 6;
 let screen = seedScreen(width,height);
 
 renderScreen(screen, width, height);
-
+/*
 let input = 'rect 3x2';
 screen = parseInput(screen, input);
 renderScreen(screen, width, height);
 
-screen = parseInput(screen, 'rotate row y=0 by 3');
+console.log('NOW DO COL');
+screen = parseInput(screen, 'rotate column x=1 by 1');
 renderScreen(screen, width, height);
+
+console.log('NOW DO RECT');
+
+screen = parseInput(screen, 'rotate row y=0 by 4');
+renderScreen(screen, width, height);
+
+console.log('NOW DO COL');
+screen = parseInput(screen, 'rotate column x=1 by 1');
+renderScreen(screen, width, height);
+*/
+
+const fs = require('fs');
+const input = fs.readFileSync('./input.txt','utf8');
+
+let good = 0;
+let lines = input.split('\n');
+lines.forEach(function(line) {
+	screen = parseInput(screen, line);
+	renderScreen(screen, width, height);
+});
+
+let total = getTotal(screen);
+console.log(total);
+
+function getTotal(s) {
+	let total = 0;
+	for(let x=0;x<s.length;x++) {
+		for(let y=0;y<s[x].length;y++) {
+			if(s[x][y] === "#") total++;
+		}
+	}
+	return total;
+}
 
 function parseInput(screen, i) {
 	if(i.indexOf('rect') === 0) {
@@ -29,7 +63,35 @@ function parseInput(screen, i) {
 		return rotateRow(screen, width, height, row, offset);
 	}
 
+	//	otate column x=1 by 1
+	if(i.indexOf('rotate column') === 0) {
+		let dim = i.split(' column x=')[1];
+		let col = Number(dim.split(' by ')[0]);
+		let offset = Number(dim.split(' by ')[1]);
+		return rotateColumn(screen, width, height, col, offset);
+	}
+
 	throw('Unknown command: '+i);
+}
+
+function rotateColumn(s, w, h, c, o) {
+	//##.  => .## (1)
+	//##. => #.# (2)
+	let originalCol = s[c];
+//	console.log('offset is '+o);
+//	console.log('origCol='+originalCol.join(''));
+	let newCol = [];
+	for(let x=0;x<originalCol.length;x++) {
+		let thisVal = originalCol[x];
+		let newPos = x + o;
+//		console.log('thisVal='+thisVal+' newPos='+newPos);
+		if(newPos >= originalCol.length) newPos =  newPos - originalCol.length;
+//		console.log(' newPos='+newPos);
+		newCol[newPos] = thisVal;
+	}
+//	console.log('newCol='+newCol);
+	s[c] = newCol;
+	return s;
 }
 
 function rotateRow(s, w, h, r, o) {
@@ -38,7 +100,6 @@ function rotateRow(s, w, h, r, o) {
 	we make a new list starting at 2. 
 	#00##
 	*/
-	console.log('i wanted row '+r);
 	let originalRow = [];
     for(let x=0;x<w;x++) {
         for(let i=0;i<h;i++) {
@@ -47,21 +108,23 @@ function rotateRow(s, w, h, r, o) {
 			}
         }
     }
-	console.log('or: '+originalRow.join('')+'-');
+//	console.log('or: '+originalRow.join('')+'-');
 	let newRow = [];
 	let done = 0;
+	//because:
+	o++;
 	for(let x = o; x < o+originalRow.length; x++) {
 		let pos = x;
-		console.log('trying to set '+pos);
+//		console.log('trying to set '+pos);
 		if(pos > w) pos = pos-w;
-		console.log('really '+pos);
+//		console.log('really '+pos);
 //		newRow.push(originalRow[x]);
-console.log('val to set is '+originalRow[done]);
+//console.log('val to set is '+originalRow[done]);
 		newRow[pos-1] = originalRow[done];
 		done++;
 //		console.log('new Row len is now '+newRow.length);
 	}
-	console.log('newRow: '+newRow.join(''));
+//	console.log('newRow: '+newRow.join(''));
     for(let x=0;x<w;x++) {
         for(let i=0;i<h;i++) {
 			if(i === r) {
