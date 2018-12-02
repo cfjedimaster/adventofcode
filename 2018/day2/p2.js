@@ -17,11 +17,12 @@ for(let x=0;x<input.length;x++) {
 		//I should not compare the same, but since they won't be a match, it won't matter
 		let closeResult = closeString(input[x], input[y]);
 		if(closeResult > 0) {
-			console.log(input[x]);
-			console.log(input[y]);
+			//console.log(input[x]);
+			//console.log(input[y]);
 			// there's some weird bug where the console msg below doesn't print right. Never figured it out.
 			console.log(`Match with ${input[x]} and ${input[y]}`);
-			console.log(`it matched at ${closeResult}`);
+			console.log('Match with '+input[x]+' and '+input[y]);
+			//console.log(`it matched at ${closeResult}`);
 			let chars = input[x].split('');
 			chars.splice(closeResult, 1);
 			let result = chars.join('');
