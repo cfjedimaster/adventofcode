@@ -1,0 +1,1 @@
+My logic for getCol was NOT right, but worked for part1. For part2 I fixed it.
