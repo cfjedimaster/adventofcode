@@ -15,10 +15,10 @@ testInput = """
 5,5 -> 8,2
 """
 
-input = testInput
-#file = open(r"input.txt","r")
-#input = file.read()
-#file.close()
+#input = testInput
+file = open(r"input.txt","r")
+input = file.read()
+file.close()
 
 input = input.strip().split("\n")
 
@@ -58,7 +58,7 @@ for line in input:
 		}
 	})
 
-pp.pprint(goodLines)
+#pp.pprint(goodLines)
 
 def printGrid(field):
 	for x in range(0, len(field)):
@@ -85,7 +85,30 @@ for line in goodLines:
 		for x in range(line["pos1"]["x"], line["pos2"]["x"]+1):
 			field[x][ypos] +=1
 	else:
-		print("do diagonal", line)
+		#print("do diagonal", line)
+		# so my new logic is to go from x1 to x2, cuz since we have a 45 degree diag, there should be the same
+		# of steps - i'll also note if x is going up or down and y ditto. this feels lame
+		# btw - looking at the logic now, i think diagonal would work for all and make things MUCH simpler
+		# but im being lazy
+		xDir = 1
+		yDir = 1
+
+		if line["pos1"]["x"] > line["pos2"]["x"]:
+			xDir = -1
+		if line["pos1"]["y"] > line["pos2"]["y"]:
+			yDir = -1
+		total = abs(line["pos1"]["x"] - line["pos2"]["x"])
+
+		current = {
+			"x":line["pos1"]["x"],
+			"y":line["pos1"]["y"]
+		}
+
+		for x in range(0, total+1):
+			field[current["x"]][current["y"]] += 1
+			current["x"] += xDir
+			current["y"] += yDir
+
 	#printGrid(field)
 
 # count bad
