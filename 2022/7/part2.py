@@ -1138,19 +1138,41 @@ for output in input:
 
 
 
-print('-------------')
-#print(structure)
-print('-------------')
 
 for s in structure:
 	#print(s)
 	size = getSize(s)
-	print(s['label'],size)
+	#print(s['label'],size)
 	s["totalsize"] = size
 
-totalBelow100000 = 0
+# ok, so how much do i need to free?
+total =    70000000
+required = 30000000
 for s in structure:
-	if s["totalsize"] < 100000:
-		totalBelow100000 = totalBelow100000 + s["totalsize"]
+	if s["label"] == "/":
+		free = total - s["totalsize"]
 
-print(totalBelow100000)
+print("i have ", free, " space")
+need = required - free
+
+print("I need", need)
+
+# find all possible > need
+possible = []
+for s in structure:
+	#print(f"checking size for {s['label']} it is {s['totalsize']}")
+	if s["totalsize"] > need:
+		possible.append(s)
+
+smallest = total
+for p in possible:
+	if p["totalsize"] < smallest:
+		target = p
+
+#print("Possibles")
+#for p in possible:
+#	print(p)
+
+print("---")
+print("Winner", target["label"], target["totalsize"])
+# dont use 187968
