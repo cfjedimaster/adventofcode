@@ -117,31 +117,44 @@ for i in input:
 Given an array, and pos, I'm visible if everything BELOW my pos is <, or everything
 ABOVE my pos is <
 """
-def checkVisible(pos, arr):
+def getScenic(pos, arr):
 	#print("ENTER FUNC", arr, pos)
 	mySize = arr[pos]
 	#print(f"mySize is {mySize}")
-	goodLeft = True
-	goodRight = True
 
-	for x in range(0, pos):
-		#print(f'LEFT: checking at {x}')
+	total1 = 0
+	total2 = 0
+	counting = True
+
+	for x in range(pos-1,-1,-1):
+		#print(f'LEFT: checking at {x}, it is {arr[x]}')
 		if arr[x] >= mySize:
+			if counting:
+				total1 = total1 + 1
+			counting = False
 			#print('failed to left')
-			goodLeft = False
+		elif counting == True:
+			total1 = total1+1
+
+	#print("total is now",total1)
+	counting = True
 
 	for x in range(pos+1, len(arr)):
-		#print(f'RIGHT: checking at {x}')
+		#print(f'RIGHT: checking at {x}, it is {arr[x]}')
 		if arr[x] >= mySize:
+			if counting:
+				total2 = total2 + 1
 			#print('failed to right')
-			goodRight = False
+			counting = False
+		elif counting == True:
+			total2 = total2 + 1
 
 
+	#print("total(2) is now",total2)
+	return total1 * total2
 
-	return goodLeft or goodRight
 
-
-totalVisible = 0
+highestScenic = 0
 for idx,row in enumerate(forest):
 	# we can ignore top and bottom
 	if idx != 0 and idx != len(forest)-1:
@@ -149,7 +162,6 @@ for idx,row in enumerate(forest):
 			# we can ignore beg and end
 			if idy != 0 and idy != len(row)-1:
 				me = forest[idx][idy]
-				#print(f"I'm tree {me} at {idx}/{idy}")
 				# get my row and col
 				#print(f"my row is {row}")
 				col = []
@@ -158,26 +170,13 @@ for idx,row in enumerate(forest):
 
 				#print(f"my col is {col}")
 
-				isVisible = False
-				# so, am i the biggest in my row? 
-				if checkVisible(idy, row) == True:
-					#print("I was biggest in my row in a dir")
-					isVisible = True
+				myTotal = getScenic(idy, row) * getScenic(idx, col)
+				#print(f"my total is {myTotal}")
+				if myTotal > highestScenic:
+					highestScenic = myTotal
 
-				if checkVisible(idx, col) == True:
-					#print("I was biggest in my col in a dir")
-					isVisible = True
-
-				if isVisible:
-					totalVisible = totalVisible + 1
-		#sys.exit()
 
 
 print("------------")
-print(f"Total ",totalVisible)
+print(f"Highest Scenic Value ",highestScenic)
 
-ext = 2 * len(forest) + 2 * len(forest[0]) - 4
-print(ext)
-
-realTotal = ext + totalVisible
-print("FINAL", realTotal)
